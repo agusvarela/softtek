@@ -1,0 +1,105 @@
+openapi: 3.0.1
+
+info:
+  title: Softtek Interview API
+  description: "Find the [Softtek Postman collection](https://documenter.getpostman.com/view/10728290/2sA358ekwu)"
+  contact:
+    name: Agustin Varela
+    url: https://github.com/agusvarela/softtek.git
+    email: agus.varela10@gmail.com
+  version: "1.0"
+
+servers:
+  - url: http://localhost:8080
+    description: Server URL in Development environment
+
+tags:
+  - name: PriceController
+    description: The Price API
+
+paths:
+  /priority-price:
+    get:
+      tags:
+        - PriceController
+      summary: Get Priority Price
+      operationId: getPriorityPrice
+      parameters:
+        - name: requestDto
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/PriceRequestDto'
+      responses:
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PriceResponseDto'
+        "404":
+          description: Price not found
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+components:
+  schemas:
+    PriceRequestDto:
+      required:
+        - applicationDate
+        - brandId
+        - productId
+      type: object
+      properties:
+        productId:
+          minimum: 1
+          type: integer
+          format: int64
+        brandId:
+          minimum: 1
+          type: integer
+          format: int64
+        applicationDate:
+          type: string
+          format: date-time
+    ApiError:
+      type: object
+      properties:
+        errorType:
+          type: string
+        errorDescription:
+          type: string
+        errorMessage:
+          type: string
+    PriceResponseDto:
+      type: object
+      properties:
+        brandId:
+          type: integer
+          format: int64
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        priceList:
+          type: integer
+          format: int32
+        productId:
+          type: integer
+          format: int64
+        price:
+          type: number
+        currency:
+          type: string
